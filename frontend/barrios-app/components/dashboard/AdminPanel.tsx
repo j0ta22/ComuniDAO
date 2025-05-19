@@ -141,7 +141,7 @@ export function AdminPanel() {
     try {
       setLoading(true)
       console.log('handleCloseVoting: Iniciando...')
-      await asistencia.closeVotingPeriod(0n, user.wallet)
+      await asistencia.closeVotingPeriod(BigInt(0), user.wallet)
       console.log('handleCloseVoting: Completado')
       toast.success('Periodo de votación cerrado correctamente')
       await fetchCurrentPhase()
