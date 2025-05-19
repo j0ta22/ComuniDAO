@@ -17,12 +17,13 @@ export interface Proposal {
 // Tipos para las fases
 export type Phase = 'Closed' | 'Proposals' | 'Voting'
 
-interface WinningProposal {
-  id: bigint
-  proposer: `0x${string}`
+export interface WinningProposal {
+  id: number
+  title: string
   description: string
-  votes: bigint
-  date: bigint
+  proposer: `0x${string}`
+  votesFor: number
+  date: number
 }
 
 export class AsistenciaService {

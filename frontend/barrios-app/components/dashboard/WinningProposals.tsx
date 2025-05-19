@@ -2,17 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { AsistenciaService } from '@/lib/services/asistencia'
+import { AsistenciaService, type WinningProposal } from '@/lib/services/asistencia'
 import { type Address } from 'viem'
-
-interface WinningProposal {
-  id: number
-  title: string
-  description: string
-  proposer: `0x${string}`
-  votesFor: number
-  date: number
-}
 
 export function WinningProposals() {
   const [winningProposals, setWinningProposals] = useState<WinningProposal[]>([])

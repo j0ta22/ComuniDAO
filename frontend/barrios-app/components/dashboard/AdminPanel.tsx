@@ -53,7 +53,7 @@ export function AdminPanel() {
     if (!addressToAuthorize) return toast.error('Ingresa un address válido')
     setLoading(true)
     try {
-      await asistencia.authorize(addressToAuthorize, user)
+      await asistencia.authorize(addressToAuthorize as `0x${string}`, user, user.wallet)
       toast.success('Cuenta autorizada correctamente')
       setAddressToAuthorize('')
     } catch (e) {
@@ -140,7 +140,7 @@ export function AdminPanel() {
     try {
       setLoading(true)
       console.log('handleCloseVoting: Iniciando...')
-      await asistencia.closeVotingPeriod(0, user.wallet)
+      await asistencia.closeVotingPeriod(0n, user.wallet)
       console.log('handleCloseVoting: Completado')
       toast.success('Periodo de votación cerrado correctamente')
       await fetchCurrentPhase()
