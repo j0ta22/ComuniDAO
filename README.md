@@ -11,6 +11,8 @@ ComuniDAO es una aplicación de gobernanza descentralizada que permite a los res
 - 📱 Interfaz responsive y amigable
 - 🔗 Integración con Mantle Sepolia Testnet
 
+Demo: https://comuni-dao.vercel.app/
+
 ## Requisitos Previos
 
 - Node.js (v18 o superior)
