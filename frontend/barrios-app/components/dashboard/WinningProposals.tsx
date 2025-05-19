@@ -9,8 +9,9 @@ interface WinningProposal {
   id: number
   title: string
   description: string
-  proposer: Address
+  proposer: `0x${string}`
   votesFor: number
+  date: number
 }
 
 export function WinningProposals() {
@@ -62,23 +63,36 @@ export function WinningProposals() {
   }
 
   return (
-    <div className="w-full space-y-6">
-      <h2 className="text-2xl font-bold text-center mb-8">Propuestas Ganadoras</h2>
+    <div className="space-y-6">
+      <h2 className="text-2xl font-bold">Propuestas Ganadoras</h2>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {winningProposals.map((proposal) => (
-          <Card key={proposal.id} className="flex flex-col">
+        {winningProposals
+          .filter(proposal => proposal.votesFor > 0)
+          .map((proposal) => (
+          <Card key={proposal.id} className="overflow-hidden">
             <CardHeader>
-              <CardTitle className="line-clamp-2">{proposal.title}</CardTitle>
+              <CardTitle>{proposal.title}</CardTitle>
               <CardDescription>
-                Propuesta #{proposal.id} • {proposal.votesFor} votos
+                Propuesta #{proposal.id}
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex-1">
-              <p className="text-sm text-muted-foreground line-clamp-3">
+            <CardContent>
+              <p className="text-sm text-muted-foreground mb-4">
                 {proposal.description}
               </p>
-              <div className="mt-4 text-xs text-muted-foreground">
-                Propuesta por: {proposal.proposer.slice(0, 6)}...{proposal.proposer.slice(-4)}
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">
+                  Votos: {proposal.votesFor}
+                </span>
+                <span className="text-muted-foreground">
+                  Ganó el: {new Intl.DateTimeFormat('es-ES', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  }).format(new Date(Number(proposal.date) * 1000))}
+                </span>
               </div>
             </CardContent>
           </Card>

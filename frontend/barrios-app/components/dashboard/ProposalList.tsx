@@ -26,22 +26,33 @@ export function ProposalList({ userAddress }: ProposalListProps) {
   const loadData = async () => {
     try {
       setIsLoading(true)
+      console.log('ProposalList: Iniciando carga de datos...')
       const [proposalsData, phase, authorized] = await Promise.all([
         asistencia.getProposals(),
-        asistencia.getCurrentPhase(),
+        asistencia.getPhase(),
         userAddress ? asistencia.isAuthorized(userAddress) : false
       ])
+      console.log('ProposalList: Datos cargados:', {
+        proposals: proposalsData,
+        phase,
+        authorized,
+        userAddress
+      })
       setProposals(proposalsData)
       setCurrentPhase(phase)
       setIsAuthorized(authorized)
     } catch (error) {
       console.error('Error al cargar propuestas:', error)
+      toast.error('Error al cargar propuestas', {
+        description: error instanceof Error ? error.message : 'No se pudieron cargar las propuestas'
+      })
     } finally {
       setIsLoading(false)
     }
   }
 
   useEffect(() => {
+    console.log('ProposalList: useEffect ejecutado con userAddress:', userAddress)
     loadData()
   }, [userAddress])
 

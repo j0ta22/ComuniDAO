@@ -18,6 +18,7 @@ export function AdminPanel() {
   const { wallets } = useWallets()
   const connectedWallet = wallets[0]?.address
   const { user } = usePrivy()
+  const [currentPhase, setCurrentPhase] = useState<'Closed' | 'Proposals' | 'Voting'>('Closed')
 
   useEffect(() => {
     async function fetchOwner() {
@@ -28,12 +29,23 @@ export function AdminPanel() {
           !!connectedWallet &&
           ownerAddress?.toLowerCase() === connectedWallet?.toLowerCase()
         )
+        await fetchCurrentPhase()
       } catch (e) {
         toast.error('No se pudo obtener el owner del contrato')
       }
     }
     fetchOwner()
   }, [connectedWallet])
+
+  const fetchCurrentPhase = async () => {
+    try {
+      const phase = await asistencia.getPhase()
+      console.log('Fase actual:', phase)
+      setCurrentPhase(phase as 'Closed' | 'Proposals' | 'Voting')
+    } catch (error) {
+      console.error('Error al obtener la fase actual:', error)
+    }
+  }
 
   if (!isOwner) return null
 
@@ -67,23 +79,49 @@ export function AdminPanel() {
   }
 
   const handleOpenProposals = async () => {
-    setLoading(true)
+    if (!user?.wallet) {
+      toast.error('Por favor, conecta tu wallet primero')
+      return
+    }
+    if (currentPhase !== 'Closed') {
+      toast.error('No se puede abrir la fase de propuestas en este momento')
+      return
+    }
     try {
-      await asistencia.openProposalsPeriod(user)
-      toast.success('Periodo de propuestas abierto')
-    } catch (e) {
-      toast.error('Error al abrir periodo de propuestas')
+      setLoading(true)
+      console.log('handleOpenProposals: Iniciando...')
+      await asistencia.openVotingPeriod(user.wallet)
+      console.log('handleOpenProposals: Completado')
+      toast.success('Fase de propuestas abierta correctamente')
+      await fetchCurrentPhase()
+    } catch (error) {
+      console.error('Error al abrir fase de propuestas:', error)
+      toast.error('Error al abrir fase de propuestas')
     } finally {
       setLoading(false)
     }
   }
 
   const handleOpenVoting = async () => {
-    setLoading(true)
+    if (!user?.wallet) {
+      toast.error('Por favor, conecta tu wallet primero')
+      return
+    }
+    if (currentPhase !== 'Proposals') {
+      toast.error('No se puede abrir el periodo de votación en este momento')
+      return
+    }
     try {
-      await asistencia.openVotingPeriod(user)
-      toast.success('Periodo de votación abierto')
-    } catch (e) {
+      setLoading(true)
+      console.log('handleOpenVoting: Iniciando...')
+      console.log('handleOpenVoting: Fase actual:', currentPhase)
+      console.log('handleOpenVoting: Llamando a asistencia.startVotingPhase con wallet:', user.wallet)
+      await asistencia.startVotingPhase(user.wallet)
+      console.log('handleOpenVoting: startVotingPhase completado')
+      toast.success('Periodo de votación abierto correctamente')
+      await fetchCurrentPhase()
+    } catch (error) {
+      console.error('Error al abrir periodo de votación:', error)
       toast.error('Error al abrir periodo de votación')
     } finally {
       setLoading(false)
@@ -91,11 +129,23 @@ export function AdminPanel() {
   }
 
   const handleCloseVoting = async () => {
-    setLoading(true)
+    if (!user?.wallet) {
+      toast.error('Por favor, conecta tu wallet primero')
+      return
+    }
+    if (currentPhase !== 'Voting') {
+      toast.error('No se puede cerrar el periodo de votación en este momento')
+      return
+    }
     try {
-      await asistencia.closeVotingPeriod(BigInt(0), user)
-      toast.success('Periodo de votación cerrado')
-    } catch (e) {
+      setLoading(true)
+      console.log('handleCloseVoting: Iniciando...')
+      await asistencia.closeVotingPeriod(0, user.wallet)
+      console.log('handleCloseVoting: Completado')
+      toast.success('Periodo de votación cerrado correctamente')
+      await fetchCurrentPhase()
+    } catch (error) {
+      console.error('Error al cerrar periodo de votación:', error)
       toast.error('Error al cerrar periodo de votación')
     } finally {
       setLoading(false)
