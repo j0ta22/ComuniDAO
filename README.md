@@ -94,10 +94,7 @@ barrios-governor/
 │       ├── components/    # Componentes React
 │       ├── lib/          # Utilidades y servicios
 │       └── pages/        # Rutas de la aplicación
-├── scripts/              # Scripts de despliegue
-└── test/                # Pruebas unitarias
-    ├── BarriosGovernor.test.ts  # Pruebas del contrato
-    └── helpers/         # Utilidades para pruebas
+└── scripts/              # Scripts de despliegue
 ```
 
 ## Tecnologías Utilizadas
@@ -120,6 +117,6 @@ barrios-governor/
 
 Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.md) para más detalles.
 
-## Contacto
+## Twitter: @_j_o_t_a__
 
 Para soporte o consultas, por favor abre un issue en el repositorio.
