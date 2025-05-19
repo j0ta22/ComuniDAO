@@ -51,9 +51,10 @@ export function AdminPanel() {
 
   const handleAuthorize = async () => {
     if (!addressToAuthorize) return toast.error('Ingresa un address válido')
+    if (!user?.wallet) return toast.error('Por favor, conecta tu wallet primero')
     setLoading(true)
     try {
-      await asistencia.authorize(addressToAuthorize as `0x${string}`, user, user.wallet)
+      await asistencia.authorize(addressToAuthorize as `0x${string}`, true, user.wallet)
       toast.success('Cuenta autorizada correctamente')
       setAddressToAuthorize('')
     } catch (e) {
