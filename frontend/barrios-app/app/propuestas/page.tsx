@@ -22,7 +22,7 @@ export default function PropuestasPage() {
         try {
           const [authorized, phase] = await Promise.all([
             asistencia.isAuthorized(userAddress),
-            asistencia.getCurrentPhase()
+            asistencia.getPhase()
           ])
           setIsAuthorized(authorized)
           setCurrentPhase(phase)
